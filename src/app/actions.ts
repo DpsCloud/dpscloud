@@ -3,6 +3,7 @@
 import { encodedRedirect } from "@/utils/utils";
 import { redirect } from "next/navigation";
 import { createClient } from "../../supabase/server";
+import "@types/node";
 
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
@@ -19,18 +20,6 @@ export const signUpAction = async (formData: FormData) => {
   }
 
   try {
-    // Check if user already exists in auth
-    const { data: existingUserAuth } =
-      await supabase.auth.admin.getUserByEmail(email);
-
-    if (existingUserAuth) {
-      return encodedRedirect(
-        "error",
-        "/sign-up",
-        "Este email já está cadastrado. Por favor, faça login ou use outro email.",
-      );
-    }
-
     // Create user in auth
     const {
       data: { user },
@@ -47,6 +36,13 @@ export const signUpAction = async (formData: FormData) => {
     });
 
     if (error) {
+      if (error.message.includes("already registered")) {
+        return encodedRedirect(
+          "error",
+          "/sign-up",
+          "Este email já está cadastrado. Por favor, faça login ou use outro email.",
+        );
+      }
       return encodedRedirect("error", "/sign-up", error.message);
     }
 
@@ -86,6 +82,7 @@ export const signUpAction = async (formData: FormData) => {
       "Cadastro realizado com sucesso! Você já pode fazer login.",
     );
   } catch (err) {
+    console.error("Erro no cadastro:", err);
     return encodedRedirect(
       "error",
       "/sign-up",
@@ -164,7 +161,11 @@ export const signInWithGoogleAction = async () => {
     );
   }
 
-  return redirect(data?.url || "/dashboard");
+  if (data?.url) {
+    return redirect(data.url);
+  }
+
+  return redirect("/dashboard");
 };
 
 export const forgotPasswordAction = async (formData: FormData) => {
@@ -204,7 +205,7 @@ export const resetPasswordAction = async (formData: FormData) => {
   const confirmPassword = formData.get("confirmPassword") as string;
 
   if (!password || !confirmPassword) {
-    encodedRedirect(
+    return encodedRedirect(
       "error",
       "/protected/reset-password",
       "Senha e confirmação de senha são obrigatórias",
@@ -212,7 +213,7 @@ export const resetPasswordAction = async (formData: FormData) => {
   }
 
   if (password !== confirmPassword) {
-    encodedRedirect(
+    return encodedRedirect(
       "error",
       "/dashboard/reset-password",
       "As senhas não coincidem",
@@ -224,14 +225,14 @@ export const resetPasswordAction = async (formData: FormData) => {
   });
 
   if (error) {
-    encodedRedirect(
+    return encodedRedirect(
       "error",
       "/dashboard/reset-password",
       "Falha na atualização da senha",
     );
   }
 
-  encodedRedirect("success", "/protected/reset-password", "Senha atualizada");
+  return encodedRedirect("success", "/protected/reset-password", "Senha atualizada");
 };
 
 export const signOutAction = async () => {

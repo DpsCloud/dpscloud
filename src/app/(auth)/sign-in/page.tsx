@@ -15,6 +15,39 @@ interface LoginProps {
 
 export default async function SignInPage({ searchParams }: LoginProps) {
   const message = await searchParams;
+  const error = searchParams.error;
+
+  if (error) {
+    let errorMessage = "Erro ao fazer login com Google";
+    switch (error) {
+      case "oauth_error":
+        errorMessage = "Erro na autenticação do Google";
+        break;
+      case "no_code":
+        errorMessage = "Código de autenticação não recebido";
+        break;
+      case "session_error":
+        errorMessage = "Erro ao criar sessão";
+        break;
+      case "unexpected":
+        errorMessage = "Erro inesperado ao fazer login";
+        break;
+    }
+    return (
+      <div className="flex h-screen w-full flex-1 items-center justify-center p-4 sm:max-w-md">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold text-red-600">Erro</h2>
+          <p className="mt-2 text-gray-600">{errorMessage}</p>
+          <Link
+            href="/sign-in"
+            className="mt-4 inline-block text-blue-600 hover:text-blue-800"
+          >
+            Tentar novamente
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   if ("message" in message) {
     return (

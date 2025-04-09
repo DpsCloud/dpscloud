@@ -31,37 +31,37 @@ export default async function Home() {
       title: "Automação Inteligente",
       description:
         "Automatize tarefas repetitivas e processos de negócio com nossa tecnologia avançada. Reduza erros e aumente a eficiência operacional.",
-      icon: Bot,
+      icon: <Bot className="w-6 h-6" />,
     },
     {
       title: "IA Preditiva",
       description:
         "Antecipe tendências e comportamentos com nossa IA preditiva. Tome decisões mais inteligentes baseadas em dados e insights avançados.",
-      icon: Brain,
+      icon: <Brain className="w-6 h-6" />,
     },
     {
       title: "Integração Total",
       description:
         "Conecte todos os seus sistemas e ferramentas em uma única plataforma. Fluxos de trabalho integrados e comunicação unificada.",
-      icon: Activity,
+      icon: <Activity className="w-6 h-6" />,
     },
     {
       title: "Análise Avançada",
       description:
         "Obtenha insights profundos sobre seu negócio com dashboards personalizados e relatórios em tempo real. Métricas que importam.",
-      icon: Activity,
+      icon: <Activity className="w-6 h-6" />,
     },
     {
       title: "Automação de Atendimento",
       description:
         "Atendimento ao cliente 24/7 com chatbots inteligentes. Respostas instantâneas e personalizadas para melhor experiência do cliente.",
-      icon: Bot,
+      icon: <Bot className="w-6 h-6" />,
     },
     {
       title: "Otimização de Processos",
       description:
         "Identifique e elimine gargalos em seus processos. Fluxos de trabalho otimizados para máxima produtividade e eficiência.",
-      icon: Zap,
+      icon: <Zap className="w-6 h-6" />,
     },
   ];
 

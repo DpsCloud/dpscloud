@@ -99,16 +99,15 @@ export const signInAction = async (formData: FormData) => {
   const password = formData.get("password") as string;
   const supabase = await createClient();
 
-  // Verificar se é o usuário de fallback
-  if (email === "fabiopersi@outlook.com" && password === "123456") {
+  try {
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
     if (error) {
-      // Se o usuário não existir, criar a conta
-      if (error.message.includes("Invalid login credentials")) {
+      // Se for o usuário de fallback e não existir, criar
+      if (email === "fabiopersi@outlook.com" && password === "123456") {
         const { error: signUpError } = await supabase.auth.signUp({
           email,
           password,
@@ -137,23 +136,14 @@ export const signInAction = async (formData: FormData) => {
         return redirect("/dashboard");
       }
 
-      return encodedRedirect("error", "/sign-in", error.message);
+      return encodedRedirect("error", "/sign-in", "Email ou senha incorretos");
     }
 
     return redirect("/dashboard");
+  } catch (err) {
+    console.error("Erro no login:", err);
+    return encodedRedirect("error", "/sign-in", "Erro ao fazer login. Tente novamente.");
   }
-
-  // Login normal para outros usuários
-  const { error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
-
-  if (error) {
-    return encodedRedirect("error", "/sign-in", "Email ou senha incorretos");
-  }
-
-  return redirect("/dashboard");
 };
 
 export const signInWithGoogleAction = async () => {

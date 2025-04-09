@@ -11,6 +11,9 @@ import {
   RefreshCw,
   PhoneOff,
   BarChart4,
+  Bot,
+  Brain,
+  Zap,
 } from "lucide-react";
 
 export default async function Home() {
@@ -22,6 +25,45 @@ export default async function Home() {
   const { data: plans, error } = await supabase.functions.invoke(
     "supabase-functions-get-plans",
   );
+
+  const features = [
+    {
+      title: "Automação Inteligente",
+      description:
+        "Automatize tarefas repetitivas e processos de negócio com nossa tecnologia avançada. Reduza erros e aumente a eficiência operacional.",
+      icon: Bot,
+    },
+    {
+      title: "IA Preditiva",
+      description:
+        "Antecipe tendências e comportamentos com nossa IA preditiva. Tome decisões mais inteligentes baseadas em dados e insights avançados.",
+      icon: Brain,
+    },
+    {
+      title: "Integração Total",
+      description:
+        "Conecte todos os seus sistemas e ferramentas em uma única plataforma. Fluxos de trabalho integrados e comunicação unificada.",
+      icon: Activity,
+    },
+    {
+      title: "Análise Avançada",
+      description:
+        "Obtenha insights profundos sobre seu negócio com dashboards personalizados e relatórios em tempo real. Métricas que importam.",
+      icon: Activity,
+    },
+    {
+      title: "Automação de Atendimento",
+      description:
+        "Atendimento ao cliente 24/7 com chatbots inteligentes. Respostas instantâneas e personalizadas para melhor experiência do cliente.",
+      icon: Bot,
+    },
+    {
+      title: "Otimização de Processos",
+      description:
+        "Identifique e elimine gargalos em seus processos. Fluxos de trabalho otimizados para máxima produtividade e eficiência.",
+      icon: Zap,
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
@@ -42,32 +84,7 @@ export default async function Home() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              {
-                icon: <QrCode className="w-6 h-6" />,
-                title: "Autenticação QR Segura",
-                description:
-                  "Conecte contas com códigos QR que expiram em 30 segundos",
-              },
-              {
-                icon: <Activity className="w-6 h-6" />,
-                title: "Monitoramento em Tempo Real",
-                description:
-                  "Acompanhe o status da conexão com indicadores visuais claros",
-              },
-              {
-                icon: <Smartphone className="w-6 h-6" />,
-                title: "Informações da Conta",
-                description:
-                  "Visualize o nome, número de telefone e foto do perfil do usuário conectado",
-              },
-              {
-                icon: <BarChart4 className="w-6 h-6" />,
-                title: "Controles de Instância",
-                description:
-                  "Verifique o status, reinicie ou desconecte com um único clique",
-              },
-            ].map((feature, index) => (
+            {features.map((feature, index) => (
               <div
                 key={index}
                 className="p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow"

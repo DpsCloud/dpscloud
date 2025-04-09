@@ -99,70 +99,66 @@ export const signInAction = async (formData: FormData) => {
   try {
     // Verificar se é o usuário admin
     if (email === "admin" && password === "admin") {
-      const { error: signUpError } = await supabase.auth.signUp({
+      // Tentar fazer login direto com as credenciais do admin
+      const { data: { user }, error: loginError } = await supabase.auth.signInWithPassword({
         email: "admin@dpscloud.com",
         password: "admin123!@#",
-        options: {
-          data: {
-            full_name: "Administrador",
-            email: "admin@dpscloud.com",
-          },
-        },
       });
 
-      if (!signUpError) {
-        // Fazer login com as credenciais do admin
-        const { error: loginError } = await supabase.auth.signInWithPassword({
+      // Se não conseguir fazer login, criar o usuário
+      if (loginError) {
+        // Criar o usuário admin
+        const { data: { user: newUser }, error: signUpError } = await supabase.auth.signUp({
           email: "admin@dpscloud.com",
           password: "admin123!@#",
         });
 
-        if (!loginError) {
-          return redirect("/dashboard");
+        if (signUpError || !newUser) {
+          console.error("Erro ao criar admin:", signUpError);
+          return encodedRedirect("error", "/sign-in", "Erro ao criar usuário admin");
         }
+
+        // Criar o perfil do admin
+        const { error: insertError } = await supabase.from("users").insert({
+          id: newUser.id,
+          user_id: newUser.id,
+          name: "Administrador",
+          email: "admin@dpscloud.com",
+          token_identifier: newUser.id,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        });
+
+        if (insertError) {
+          console.error("Erro ao criar perfil admin:", insertError);
+          return encodedRedirect("error", "/sign-in", "Erro ao criar perfil do admin");
+        }
+
+        // Login automático após criar a conta
+        return redirect("/dashboard");
+      }
+
+      // Se o login foi bem sucedido
+      if (user) {
+        return redirect("/dashboard");
       }
     }
 
-    const { error } = await supabase.auth.signInWithPassword({
+    // Login normal para outros usuários
+    const { data: { user }, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
     if (error) {
-      // Se for o usuário de fallback e não existir, criar
-      if (email === "fabiopersi@outlook.com" && password === "123456") {
-        const { error: signUpError } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: {
-              full_name: "Fabio Persi",
-              email: email,
-            },
-          },
-        });
-
-        if (signUpError) {
-          return encodedRedirect("error", "/sign-in", signUpError.message);
-        }
-
-        // Tentar login novamente após criar a conta
-        const { error: loginError } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-
-        if (loginError) {
-          return encodedRedirect("error", "/sign-in", loginError.message);
-        }
-
-        return redirect("/dashboard");
-      }
-
       return encodedRedirect("error", "/sign-in", "Email ou senha incorretos");
     }
 
-    return redirect("/dashboard");
+    if (user) {
+      return redirect("/dashboard");
+    }
+
+    return encodedRedirect("error", "/sign-in", "Erro ao fazer login");
   } catch (err) {
     console.error("Erro no login:", err);
     return encodedRedirect("error", "/sign-in", "Erro ao fazer login. Tente novamente.");

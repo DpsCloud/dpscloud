@@ -5,6 +5,9 @@ import {
   QrCode,
   Smartphone,
   Activity,
+  Bot,
+  Brain,
+  Zap,
 } from "lucide-react";
 
 export default function Hero() {
@@ -17,17 +20,16 @@ export default function Hero() {
         <div className="container mx-auto px-4">
           <div className="text-center max-w-4xl mx-auto">
             <h1 className="text-5xl sm:text-6xl font-bold text-gray-900 mb-8 tracking-tight">
-              Gerencie{" "}
+              Potencialize seu Negócio com{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-blue-600">
-                WhatsApp
-              </span>{" "}
-              com Nosso Painel
+                Automação e IA
+              </span>
             </h1>
 
             <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto leading-relaxed">
-              Conecte e gerencie suas contas do WhatsApp através do nosso painel
-              intuitivo. Monitore o status, autentique com segurança e controle
-              suas instâncias com facilidade.
+              Transforme sua comunicação e gestão com nossa plataforma inteligente. 
+              Automatize processos, aumente sua produtividade e impulsione seus resultados 
+              com o poder da Inteligência Artificial.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -47,18 +49,18 @@ export default function Hero() {
               </Link>
             </div>
 
-            <div className="mt-16 flex flex-col sm:flex-row items-center justify-center gap-8 text-sm text-gray-600">
+            <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
               <div className="flex items-center gap-2">
-                <QrCode className="w-5 h-5 text-green-500" />
-                <span>Autenticação QR segura</span>
+                <Bot className="w-5 h-5 text-green-500" />
+                <span>Automação Inteligente</span>
               </div>
               <div className="flex items-center gap-2">
-                <Activity className="w-5 h-5 text-green-500" />
-                <span>Monitoramento em tempo real</span>
+                <Brain className="w-5 h-5 text-green-500" />
+                <span>IA Avançada</span>
               </div>
               <div className="flex items-center gap-2">
-                <Smartphone className="w-5 h-5 text-green-500" />
-                <span>Gerenciamento de múltiplas contas</span>
+                <Zap className="w-5 h-5 text-green-500" />
+                <span>Produtividade Máxima</span>
               </div>
             </div>
           </div>

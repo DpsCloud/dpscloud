@@ -97,6 +97,32 @@ export const signInAction = async (formData: FormData) => {
   const supabase = await createClient();
 
   try {
+    // Verificar se é o usuário admin
+    if (email === "admin" && password === "admin") {
+      const { error: signUpError } = await supabase.auth.signUp({
+        email: "admin@dpscloud.com",
+        password: "admin123!@#",
+        options: {
+          data: {
+            full_name: "Administrador",
+            email: "admin@dpscloud.com",
+          },
+        },
+      });
+
+      if (!signUpError) {
+        // Fazer login com as credenciais do admin
+        const { error: loginError } = await supabase.auth.signInWithPassword({
+          email: "admin@dpscloud.com",
+          password: "admin123!@#",
+        });
+
+        if (!loginError) {
+          return redirect("/dashboard");
+        }
+      }
+    }
+
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
